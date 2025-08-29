@@ -117,7 +117,9 @@ User - {}"""
 ⭐ Rating: {rating} / 10</b>
 """
 
-    FILE_CAPTION = """<b>{file_name}</b>"""
+    FILE_CAPTION = """<b>📂Fɪʟᴇɴᴀᴍᴇ : {file_name}\n\n𝖩𝗈𝗂𝗇➥ <a href="https://t.me/MoviesSearchPro">𝐌𝐨𝐯𝐢𝐞 𝐒𝐞𝐚𝐫𝐜𝐡 𝐏𝐫𝐨</a></b>
+
+<b> Size ⚙️: {file_size}</b>"""
 
     ALRT_TXT = """ᴡʜᴀᴛ ᴀʀᴇ ʏᴏᴜ sᴇᴀʀᴄʜɪɴɢ !?"""
 
@@ -445,3 +447,4 @@ Aᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴀɴᴅ ᴍᴀᴋᴇ ᴍᴇ ᴀ�
 ʙʏ /details ᴄᴏᴍᴍᴀɴᴅ
 </blockquote>
 Iғ ʏᴏᴜ ʜᴀᴠᴇ ᴀɴʏ ᴅᴏᴜʙᴛs ᴘʟᴇᴀsᴇ <a href="https://telegram.dog/JisshuDeveloperBot">ᴄᴏɴᴛᴀᴄᴛ</a> ᴍʏ <a href="https://telegram.dog/im_jisshu">Z I Ƨ Ή Λ П ♡</a></b>"""
+
