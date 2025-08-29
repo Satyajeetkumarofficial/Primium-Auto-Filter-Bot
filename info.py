@@ -24,10 +24,10 @@ PORT = environ.get("PORT", "8082")
 # Owners
 ADMINS = [
     int(admin) if id_pattern.search(admin) else admin
-    for admin in environ.get("ADMINS", "5672857559").split()
+    for admin in environ.get("ADMINS", "7413682152").split()
 ]
 OWNER_USERNAME = environ.get(
-    "OWNER_USERNAME", "IM_JISSHU"
+    "OWNER_USERNAME", "Satyajeetkumarofficial"
 )  # without @ or https://t.me/
 USERNAME = environ.get("USERNAME", "")  # ADMIN USERNAME
 
@@ -53,15 +53,15 @@ FILES_DATABASE = environ.get("FILES_DATABASE", "")
 COLLECTION_NAME = environ.get("COLLECTION_NAME", "jisshu")
 
 # Other Channel's
-SUPPORT_GROUP = int(environ.get("SUPPORT_GROUP", "-1001864434358"))
+SUPPORT_GROUP = int(environ.get("SUPPORT_GROUP", "-1002459120948"))
 DELETE_CHANNELS = int(environ.get("DELETE_CHANNELS", "0"))
-request_channel = environ.get("REQUEST_CHANNEL", "-1001864434358")
+request_channel = environ.get("REQUEST_CHANNEL", "-1002459120948")
 REQUEST_CHANNEL = (
     int(request_channel)
     if request_channel and id_pattern.search(request_channel)
     else None
 )
-MOVIE_UPDATE_CHANNEL = int(environ.get("MOVIE_UPDATE_CHANNEL", "-1001864434358"))
+MOVIE_UPDATE_CHANNEL = int(environ.get("MOVIE_UPDATE_CHANNEL", "-1002459120948"))
 
 # Added Link Here Not Id
 SUPPORT_CHAT = environ.get("SUPPORT_CHAT", "")
@@ -70,22 +70,22 @@ MOVIE_GROUP_LINK = environ.get("MOVIE_GROUP_LINK", "")
 # Verification
 IS_VERIFY = is_enabled("IS_VERIFY", True)
 # ---------------------------------------------------------------
-TUTORIAL = environ.get("TUTORIAL", "https://t.me/")
-TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/")
-TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
+TUTORIAL = environ.get("TUTORIAL", "https://t.me/ProBotXUpdate")
+TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/ProBotXUpdate")
+TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/ProBotXUpdate")
 VERIFY_IMG = environ.get(
     "VERIFY_IMG", "https://graph.org/file/1669ab9af68eaa62c3ca4.jpg"
 )
-SHORTENER_API = environ.get("SHORTENER_API", "3097623f852197a9ce40d1212aaa8bbf2803e799")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "omegalinks.in")
+SHORTENER_API = environ.get("SHORTENER_API", "1a2887e5dc4c4e8134a7b0afd82e8f2cfc0ee2d4")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "shrinkme.top")
 SHORTENER_API2 = environ.get(
-    "SHORTENER_API2", "3097623f852197a9ce40d1212aaa8bbf2803e799"
+    "SHORTENER_API2", "1a2887e5dc4c4e8134a7b0afd82e8f2cfc0ee2d4"
 )
-SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "omegalinks.in")
+SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "shrinkme.top")
 SHORTENER_API3 = environ.get(
-    "SHORTENER_API3", "3097623f852197a9ce40d1212aaa8bbf2803e799"
+    "SHORTENER_API3", "1a2887e5dc4c4e8134a7b0afd82e8f2cfc0ee2d4"
 )
-SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "omegalinks.in")
+SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "shrinkme.top")
 TWO_VERIFY_GAP = int(environ.get("TWO_VERIFY_GAP", "14400"))
 THREE_VERIFY_GAP = int(environ.get("THREE_VERIFY_GAP", "14400"))
 
@@ -136,10 +136,10 @@ START_IMG = (
 FORCESUB_IMG = environ.get("FORCESUB_IMG", "https://i.ibb.co/ZNC1Hnb/ad3f2c88a8f2.jpg")
 REFER_PICS = (environ.get("REFER_PICS", "https://envs.sh/PSI.jpg")).split()
 PAYPICS = (
-    environ.get("PAYPICS", "https://graph.org/file/f4db1c3ad3d9e38b328e6.jpg")
+    environ.get("PAYPICS", "https://i.postimg.cc/hvddRvTH/Google-Pay-QR.png")
 ).split()
 SUBSCRIPTION = environ.get(
-    "SUBSCRIPTION", "https://graph.org/file/9f3f47c690bbcc67633c2.jpg"
+    "SUBSCRIPTION", "https://graph.org/file/242b7f1b52743938d81f1.jpg"
 )
 REACTIONS = ["👀", "😱", "🔥", "😍", "🎉", "🥰", "😇", "⚡"]
 
