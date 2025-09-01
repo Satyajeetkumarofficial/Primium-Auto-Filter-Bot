@@ -77,15 +77,15 @@ VERIFY_IMG = environ.get(
     "VERIFY_IMG", "https://graph.org/file/1669ab9af68eaa62c3ca4.jpg"
 )
 SHORTENER_API = environ.get("SHORTENER_API", "1a2887e5dc4c4e8134a7b0afd82e8f2cfc0ee2d4")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "shrinkme.top")
 SHORTENER_API2 = environ.get(
     "SHORTENER_API2", "1a2887e5dc4c4e8134a7b0afd82e8f2cfc0ee2d4"
 )
-SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "")
+SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "shrinkme.top")
 SHORTENER_API3 = environ.get(
     "SHORTENER_API3", "1a2887e5dc4c4e8134a7b0afd82e8f2cfc0ee2d4"
 )
-SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "")
+SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "shrinkme.top")
 TWO_VERIFY_GAP = int(environ.get("TWO_VERIFY_GAP", "14400"))
 THREE_VERIFY_GAP = int(environ.get("THREE_VERIFY_GAP", "14400"))
 
