@@ -115,7 +115,7 @@ User - {}"""
 """
 
     FILE_CAPTION = """<b>📂Fɪʟᴇɴᴀᴍᴇ : {file_name}\n\n𝖩𝗈𝗂𝗇➥ <a href="https://t.me/MoviesSearchPro">𝐌𝐨𝐯𝐢𝐞 𝐒𝐞𝐚𝐫𝐜𝐡 𝐏𝐫𝐨</a>
-    𝖩𝗈𝗂𝗇➥ <a href="https://t.me/AllHDMovies24x7">𝖠𝗅𝗅 𝖧𝖣𝖬𝗈𝗏𝗂𝖾𝗌 24𝗑7</a></b>
+𝖩𝗈𝗂𝗇➥ <a href="https://t.me/AllHDMovies24x7">𝖠𝗅𝗅 𝖧𝖣𝖬𝗈𝗏𝗂𝖾𝗌 24𝗑7</a></b>
 
 <b> Size ⚙️: {file_size}</b>"""
 
@@ -444,6 +444,7 @@ Aᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴀɴᴅ ᴍᴀᴋᴇ ᴍᴇ ᴀ�
 ʙʏ /details ᴄᴏᴍᴍᴀɴᴅ
 </blockquote>
 Iғ ʏᴏᴜ ʜᴀᴠᴇ ᴀɴʏ ᴅᴏᴜʙᴛs ᴘʟᴇᴀsᴇ <a href="https://t.me/satyajeetkumarofficial">ᴄᴏɴᴛᴀᴄᴛ</a> ᴍʏ <a href="https://telegram.dog/im_jisshu">Z I Ƨ Ή Λ П ♡</a></b>"""
+
 
 
 
