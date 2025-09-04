@@ -92,6 +92,27 @@
   
   <!-- External JS -->
   <script src="https://developer-six-dusky.vercel.app/548/551/play.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const footer = document.querySelector("footer");
+    if (footer) {
+      footer.innerHTML = `
+        <p class="mb-0">
+          Made with ❤️ by <a href="https://t.me/ProBotXUpdate" target="_blank" class="text-warning fw-bold">Pro Botz</a>
+        </p>
+      `;
+    } else {
+      const newFooter = document.createElement("footer");
+      newFooter.className = "bg-secondary text-center py-3 mt-auto";
+      newFooter.innerHTML = `
+        <p class="mb-0">
+          Made with ❤️ by <a href="https://t.me/ProBotXUpdate" target="_blank" class="text-warning fw-bold">Pro Botz</a>
+        </p>
+      `;
+      document.body.appendChild(newFooter);
+    }
+  });
+</script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       console.log("JS Loaded Successfully");
