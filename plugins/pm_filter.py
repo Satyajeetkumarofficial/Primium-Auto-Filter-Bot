@@ -1529,7 +1529,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         )
     elif query.data == "mydevelopers":
         await query.answer(
-            "❤️ A Big Thank To All Contributors For Making This Bot Awesome!🎁🎪",
+            "❤️ A Big Thank To All Contributors & Pro Botz For Making This Bot Awesome!🎁🎪",
             show_alert=True,
         )
 
@@ -1537,7 +1537,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         buttons = [
             [
                 InlineKeyboardButton(
-                    "ʀᴇᴘᴏ", url="https://github.com/JisshuTG/Jisshu-filter-bot"
+                    "👤 𝖢𝗋𝖾𝖺𝗍𝗈𝗋", url="https://t.me/Satyajeetkumarofficial"
                 )
             ],
             [
