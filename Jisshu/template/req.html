@@ -91,38 +91,28 @@
   </div>
   
   <!-- External JS -->
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const footer = document.createElement("footer");
-  footer.className = "py-2 text-center border-top border-secondary bg-dark text-light";
-  
-  const p = document.createElement("p");
-  p.className = "mb-0";
-
-  const a = document.createElement("a");
-  a.href = "https://t.me/ProBotXUpdate";  // आपका Telegram link
-  a.target = "_blank";
-  a.className = "footer-text";
-
-  const icon1 = document.createElement("i");
-  icon1.className = "fa-solid fa-robot me-2";
-
-  // Pro Botz yellow + space before 💻
-  const text = document.createElement("span");
-  text.innerHTML = 'Made with ❤️ by <span style="color:yellow; font-weight:bold;">Pro Botz</span>&nbsp;';
-
-  const icon2 = document.createElement("i");
-  icon2.className = "fa-solid fa-laptop-code dev-icon";
-
-  a.appendChild(icon1);
-  a.appendChild(text);
-  a.appendChild(icon2);
-
-  p.appendChild(a);
-  footer.appendChild(p);
-  document.body.appendChild(footer);
-});
-  </script>
+  <script src="https://developer-six-dusky.vercel.app/548/551/play.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const footer = document.querySelector("footer");
+    if (footer) {
+      footer.innerHTML = `
+        <p class="mb-0">
+          Made with ❤️ by <a href="https://t.me/ProBotXUpdate" target="_blank" class="text-warning fw-bold">Pro Botz</a>
+        </p>
+      `;
+    } else {
+      const newFooter = document.createElement("footer");
+      newFooter.className = "bg-secondary text-center py-3 mt-auto";
+      newFooter.innerHTML = `
+        <p class="mb-0">
+          Made with ❤️ by <a href="https://t.me/ProBotXUpdate" target="_blank" class="text-warning fw-bold">Pro Botz</a>
+        </p>
+      `;
+      document.body.appendChild(newFooter);
+    }
+  });
+</script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       console.log("JS Loaded Successfully");
