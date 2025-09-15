@@ -21,6 +21,9 @@ API_HASH = environ.get("API_HASH", "")
 BOT_TOKEN = environ.get("BOT_TOKEN", "")
 PORT = environ.get("PORT", "8082")
 
+#IMDB API 
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY", "")
+
 # Owners
 ADMINS = [
     int(admin) if id_pattern.search(admin) else admin
