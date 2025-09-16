@@ -9,7 +9,7 @@ BASE_URL = "https://api.themoviedb.org/3"
 
 print("✅ movieinfo plugin imported", file=sys.stderr)
 
-# 🌐 Language code map (expanded)
+# 🌐 Language code map
 LANG_MAP = {
     "hi": "Hindi", "te": "Telugu", "ta": "Tamil", "ml": "Malayalam", "kn": "Kannada",
     "en": "English", "bn": "Bengali", "mr": "Marathi", "gu": "Gujarati",
@@ -24,29 +24,43 @@ def get_poster_url(movie_id):
         backdrops = resp.get("backdrops", [])
         posters = resp.get("posters", [])
 
+        # Hindi (no region)
         for b in backdrops:
-            if b.get("iso_639_1") == "hi":
+            if b.get("iso_639_1") == "hi" and not b.get("iso_3166_1"):
                 return f"https://image.tmdb.org/t/p/original{b['file_path']}"
+
+        # Hindi (India region)
+        for b in backdrops:
+            if b.get("iso_639_1") == "hi" and b.get("iso_3166_1") == "IN":
+                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
+
+        # English fallback
         for b in backdrops:
             if b.get("iso_639_1") == "en":
                 return f"https://image.tmdb.org/t/p/original{b['file_path']}"
+
+        # Poster fallback
         if posters:
             return f"https://image.tmdb.org/t/p/original{posters[0]['file_path']}"
+
+        # Any scene/backdrop fallback
         if backdrops:
             return f"https://image.tmdb.org/t/p/original{backdrops[0]['file_path']}"
+
         return None
     except Exception as e:
         print(f"❌ get_poster_url error: {e}", file=sys.stderr)
         return None
 
 
-# ✅ Movie Info command
+# 🎬 Movie Info Command
 @Client.on_message(filters.command("movieinfo"))
 async def movieinfo_command(client: Client, message: Message):
     if len(message.command) < 2:
-        await message.reply_text("❌ Usage: /movieinfo movie name [year]")
+        await message.reply_text("❌ Usage: /movieinfo <movie name> [year]")
         return
 
+    # Name + optional year
     if message.command[-1].isdigit() and len(message.command[-1]) == 4:
         year = message.command[-1]
         name = " ".join(message.command[1:-1])
@@ -91,10 +105,18 @@ async def movieinfo_command(client: Client, message: Message):
     genres = ", ".join([g["name"] for g in details.get("genres", [])]) or "N/A"
     runtime = details.get("runtime", "N/A")
 
-    # ✅ Languages (from spoken_languages)
-    spoken_langs = details.get("spoken_languages", [])
-    langs = [LANG_MAP.get(l["iso_639_1"], l["english_name"]) for l in spoken_langs]
-    languages = ", ".join(langs) if langs else "N/A"
+    # ✅ Languages from release_dates API
+    lang_url = f"{BASE_URL}/movie/{movie_id}/release_dates?api_key={TMDB_API_KEY}"
+    lang_resp = requests.get(lang_url, timeout=10).json()
+    results = lang_resp.get("results", [])
+
+    langs_found = set()
+    for entry in results:
+        iso = entry.get("iso_639_1")
+        if iso:
+            langs_found.add(LANG_MAP.get(iso, iso.upper()))
+
+    languages = ", ".join(sorted(langs_found)) if langs_found else "N/A"
 
     poster_url = get_poster_url(movie_id)
 
