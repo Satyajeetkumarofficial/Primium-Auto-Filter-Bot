@@ -44,7 +44,7 @@ def get_poster_url(movie_id):
 @Client.on_message(filters.command("movieinfo"))
 async def movieinfo_command(client: Client, message: Message):
     if len(message.command) < 2:
-        await message.reply_text("❌ Usage: /movieinfo <movie name> [year]")
+        await message.reply_text("❌ Usage: /movieinfo movie name [year]")
         return
 
     if message.command[-1].isdigit() and len(message.command[-1]) == 4:
