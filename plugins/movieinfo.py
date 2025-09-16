@@ -3,9 +3,8 @@ import requests
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.enums import ParseMode
-from info import Config
+from info import TMDB_API_KEY
 
-TMDB_API_KEY = Config.TMDB_API_KEY
 BASE_URL = "https://api.themoviedb.org/3"
 
 print("✅ movieinfo plugin imported", file=sys.stderr)
