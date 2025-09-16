@@ -9,54 +9,56 @@ BASE_URL = "https://api.themoviedb.org/3"
 
 print("✅ movieinfo plugin imported", file=sys.stderr)
 
-# 🌐 Language code map
+# 🌐 Language map
 LANG_MAP = {
     "hi": "Hindi", "te": "Telugu", "ta": "Tamil", "ml": "Malayalam", "kn": "Kannada",
     "en": "English", "bn": "Bengali", "mr": "Marathi", "gu": "Gujarati",
     "pa": "Punjabi", "or": "Odia", "as": "Assamese", "ur": "Urdu"
 }
 
-# ✅ Poster fetch helper (only posters, not backdrops)
-def get_poster_url(movie_id):
+# ✅ Poster fetch helper (only landscape backdrops)
+def get_thumbnail_url(movie_id):
     try:
-        url = f"{BASE_URL}/movie/{movie_id}/images?api_key={TMDB_API_KEY}&include_image_language=hi,en,null&include_image_region=IN"
+        # fetch all backdrops
+        url = f"{BASE_URL}/movie/{movie_id}/images?api_key={TMDB_API_KEY}&include_image_language=hi,en,null"
         resp = requests.get(url, timeout=10).json()
-        posters = resp.get("posters", [])
-        print(f"🖼 Found {len(posters)} posters", file=sys.stderr)
+        backdrops = resp.get("backdrops", [])
 
-        def pick_poster(lang=None, region=None, step=""):
-            for img in posters:
-                if lang and img.get("iso_639_1") != lang:
-                    continue
-                if region and img.get("iso_3166_1") != region:
-                    continue
-                url = f"https://image.tmdb.org/t/p/original{img['file_path']}"
-                print(f"✅ Picked {step} poster: {url}", file=sys.stderr)
-                return url
-            return None
+        def is_landscape(img):
+            w, h = img.get("width", 0), img.get("height", 0)
+            if not w or not h:
+                return False
+            ratio = round(w / h, 2)
+            return 1.7 <= ratio <= 1.8   # approx 16:9
 
-        # 1️⃣ Hindi poster
-        url = pick_poster(lang="hi", step="Hindi")
-        if url: return url
+        # priority 1 → Hindi
+        for b in backdrops:
+            if b.get("iso_639_1") == "hi" and is_landscape(b):
+                print("📷 Found Hindi thumbnail", file=sys.stderr)
+                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
 
-        # 2️⃣ Hindi+IN poster
-        url = pick_poster(lang="hi", region="IN", step="Hindi+IN")
-        if url: return url
+        # priority 2 → Hindi + Region IN
+        for b in backdrops:
+            if b.get("iso_639_1") == "hi" and b.get("iso_3166_1") == "IN" and is_landscape(b):
+                print("📷 Found Hindi+IN thumbnail", file=sys.stderr)
+                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
 
-        # 3️⃣ English poster
-        url = pick_poster(lang="en", step="English")
-        if url: return url
+        # priority 3 → English
+        for b in backdrops:
+            if b.get("iso_639_1") == "en" and is_landscape(b):
+                print("📷 Found English thumbnail", file=sys.stderr)
+                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
 
-        # 4️⃣ Any poster fallback
-        if posters:
-            url = f"https://image.tmdb.org/t/p/original{posters[0]['file_path']}"
-            print(f"📌 Picked fallback poster: {url}", file=sys.stderr)
-            return url
+        # fallback → any landscape backdrop
+        for b in backdrops:
+            if is_landscape(b):
+                print("📷 Found fallback thumbnail", file=sys.stderr)
+                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
 
-        print("❌ No poster found", file=sys.stderr)
+        print("❌ No thumbnail found", file=sys.stderr)
         return None
     except Exception as e:
-        print(f"❌ get_poster_url error: {e}", file=sys.stderr)
+        print(f"❌ get_thumbnail_url error: {e}", file=sys.stderr)
         return None
 
 
@@ -67,7 +69,6 @@ async def movieinfo_command(client: Client, message: Message):
         await message.reply_text("❌ Usage: /movieinfo movie name [year]")
         return
 
-    # Movie name + optional year
     if message.command[-1].isdigit() and len(message.command[-1]) == 4:
         year = message.command[-1]
         name = " ".join(message.command[1:-1])
@@ -112,12 +113,13 @@ async def movieinfo_command(client: Client, message: Message):
     genres = ", ".join([g["name"] for g in details.get("genres", [])]) or "N/A"
     runtime = details.get("runtime", "N/A")
 
-    # ✅ Languages (from spoken_languages)
+    # ✅ Languages
     spoken_langs = details.get("spoken_languages", [])
     langs = [LANG_MAP.get(l["iso_639_1"], l["english_name"]) for l in spoken_langs]
     languages = ", ".join(langs) if langs else "N/A"
 
-    poster_url = get_poster_url(movie_id)
+    # ✅ Thumbnail (landscape only)
+    poster_url = get_thumbnail_url(movie_id)
 
     caption = (
         f"🎬 <b>{title}</b> ({year})\n\n"
