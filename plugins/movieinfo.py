@@ -16,45 +16,43 @@ LANG_MAP = {
     "pa": "Punjabi", "or": "Odia", "as": "Assamese", "ur": "Urdu"
 }
 
-# ✅ Poster fetch helper
+# ✅ Poster/backdrop fetch helper
 def get_poster_url(movie_id):
     try:
-        url = f"{BASE_URL}/movie/{movie_id}/images?api_key={TMDB_API_KEY}&include_image_language=hi,en,null&include_image_region=IN"
+        url = f"{BASE_URL}/movie/{movie_id}/images?api_key={TMDB_API_KEY}&include_image_language=hi,en,null"
         resp = requests.get(url, timeout=10).json()
         backdrops = resp.get("backdrops", [])
         posters = resp.get("posters", [])
 
-        def pick_landscape(images, lang=None, region=None):
-            for img in images:
-                if lang and img.get("iso_639_1") != lang:
-                    continue
-                if region and img.get("iso_3166_1") != region:
-                    continue
-                w, h = img.get("width"), img.get("height")
-                if w and h and w >= 1000 and h <= 600:  # YouTube thumbnail style
-                    return f"https://image.tmdb.org/t/p/original{img['file_path']}"
-            return None
+        # Hindi (priority)
+        for b in backdrops:
+            if b.get("iso_639_1") == "hi":
+                print("✅ Poster selected: Hindi backdrop", file=sys.stderr)
+                return f"https://media.themoviedb.org/t/p/w1000_and_h563_face{b['file_path']}"
 
-        # 1️⃣ Hindi
-        url = pick_landscape(backdrops, lang="hi")
-        if url: return url
+        # Hindi + region IN
+        for b in backdrops:
+            if b.get("iso_639_1") == "hi" and b.get("iso_3166_1") == "IN":
+                print("✅ Poster selected: Hindi+IN backdrop", file=sys.stderr)
+                return f"https://media.themoviedb.org/t/p/w1000_and_h563_face{b['file_path']}"
 
-        # 2️⃣ Hindi + Region IN
-        url = pick_landscape(backdrops, lang="hi", region="IN")
-        if url: return url
+        # English fallback
+        for b in backdrops:
+            if b.get("iso_639_1") == "en":
+                print("✅ Poster selected: English backdrop", file=sys.stderr)
+                return f"https://media.themoviedb.org/t/p/w1000_and_h563_face{b['file_path']}"
 
-        # 3️⃣ English
-        url = pick_landscape(backdrops, lang="en")
-        if url: return url
-
-        # 4️⃣ Poster fallback
+        # Poster fallback
         if posters:
+            print("✅ Poster selected: TMDB poster", file=sys.stderr)
             return f"https://image.tmdb.org/t/p/original{posters[0]['file_path']}"
 
-        # 5️⃣ Any backdrop fallback
+        # Any scene fallback
         if backdrops:
-            return f"https://image.tmdb.org/t/p/original{backdrops[0]['file_path']}"
+            print("⚠️ Poster fallback: random backdrop", file=sys.stderr)
+            return f"https://media.themoviedb.org/t/p/w1000_and_h563_face{backdrops[0]['file_path']}"
 
+        print("❌ No poster/backdrop found", file=sys.stderr)
         return None
     except Exception as e:
         print(f"❌ get_poster_url error: {e}", file=sys.stderr)
