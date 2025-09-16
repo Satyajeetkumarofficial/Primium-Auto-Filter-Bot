@@ -7,8 +7,6 @@ from info import TMDB_API_KEY
 
 BASE_URL = "https://api.themoviedb.org/3"
 
-print("✅ movieinfo plugin imported", file=sys.stderr)
-
 # 🌐 Language code map
 LANG_MAP = {
     "hi": "Hindi", "te": "Telugu", "ta": "Tamil", "ml": "Malayalam", "kn": "Kannada",
@@ -16,7 +14,19 @@ LANG_MAP = {
     "pa": "Punjabi", "or": "Odia", "as": "Assamese", "ur": "Urdu"
 }
 
-# ✅ Poster fetch helper
+# ✅ Base image URLs
+BASE_BACKDROP_URL = "https://media.themoviedb.org/t/p/w1000_and_h563_face"
+BASE_POSTER_URL = "https://image.tmdb.org/t/p/original"
+
+def build_backdrop_url(path):
+    return f"{BASE_BACKDROP_URL}{path}"
+
+def build_poster_url(path):
+    return f"{BASE_POSTER_URL}{path}"
+
+print("✅ movieinfo plugin imported", file=sys.stderr)
+
+# ✅ Poster fetch helper (YT thumbnail style preference)
 def get_poster_url(movie_id):
     try:
         url = f"{BASE_URL}/movie/{movie_id}/images?api_key={TMDB_API_KEY}&include_image_language=hi,en,null"
@@ -24,28 +34,28 @@ def get_poster_url(movie_id):
         backdrops = resp.get("backdrops", [])
         posters = resp.get("posters", [])
 
-        # Hindi (no region)
+        # 1️⃣ Hindi backdrop
         for b in backdrops:
-            if b.get("iso_639_1") == "hi" and not b.get("iso_3166_1"):
-                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
+            if b.get("iso_639_1") == "hi":
+                return build_backdrop_url(b["file_path"])
 
-        # Hindi (India region)
+        # 2️⃣ Hindi-IN backdrop
         for b in backdrops:
             if b.get("iso_639_1") == "hi" and b.get("iso_3166_1") == "IN":
-                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
+                return build_backdrop_url(b["file_path"])
 
-        # English fallback
+        # 3️⃣ English backdrop
         for b in backdrops:
             if b.get("iso_639_1") == "en":
-                return f"https://image.tmdb.org/t/p/original{b['file_path']}"
+                return build_backdrop_url(b["file_path"])
 
-        # Poster fallback
+        # 4️⃣ Poster fallback
         if posters:
-            return f"https://image.tmdb.org/t/p/original{posters[0]['file_path']}"
+            return build_poster_url(posters[0]['file_path'])
 
-        # Any scene/backdrop fallback
+        # 5️⃣ Any backdrop fallback
         if backdrops:
-            return f"https://image.tmdb.org/t/p/original{backdrops[0]['file_path']}"
+            return build_backdrop_url(backdrops[0]['file_path'])
 
         return None
     except Exception as e:
@@ -53,14 +63,14 @@ def get_poster_url(movie_id):
         return None
 
 
-# 🎬 Movie Info Command
+# ✅ Movie Info command
 @Client.on_message(filters.command("movieinfo"))
 async def movieinfo_command(client: Client, message: Message):
     if len(message.command) < 2:
         await message.reply_text("❌ Usage: /movieinfo <movie name> [year]")
         return
 
-    # Name + optional year
+    # movie name + optional year
     if message.command[-1].isdigit() and len(message.command[-1]) == 4:
         year = message.command[-1]
         name = " ".join(message.command[1:-1])
@@ -70,7 +80,7 @@ async def movieinfo_command(client: Client, message: Message):
 
     print(f"🔎 Searching movieinfo for: {name} ({year})", file=sys.stderr)
 
-    # 🔎 Search movie
+    # 🔎 Search
     search_url = f"{BASE_URL}/search/movie?api_key={TMDB_API_KEY}&query={name}"
     if year:
         search_url += f"&year={year}"
@@ -105,18 +115,10 @@ async def movieinfo_command(client: Client, message: Message):
     genres = ", ".join([g["name"] for g in details.get("genres", [])]) or "N/A"
     runtime = details.get("runtime", "N/A")
 
-    # ✅ Languages from release_dates API
-    lang_url = f"{BASE_URL}/movie/{movie_id}/release_dates?api_key={TMDB_API_KEY}"
-    lang_resp = requests.get(lang_url, timeout=10).json()
-    results = lang_resp.get("results", [])
-
-    langs_found = set()
-    for entry in results:
-        iso = entry.get("iso_639_1")
-        if iso:
-            langs_found.add(LANG_MAP.get(iso, iso.upper()))
-
-    languages = ", ".join(sorted(langs_found)) if langs_found else "N/A"
+    # ✅ Languages (spoken_languages se multiple languages)
+    spoken_langs = details.get("spoken_languages", [])
+    langs = [LANG_MAP.get(l["iso_639_1"], l["english_name"]) for l in spoken_langs]
+    languages = ", ".join(langs) if langs else "N/A"
 
     poster_url = get_poster_url(movie_id)
 
