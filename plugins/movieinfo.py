@@ -16,54 +16,44 @@ LANG_MAP = {
     "pa": "Punjabi", "or": "Odia", "as": "Assamese", "ur": "Urdu"
 }
 
-# ✅ Poster fetch helper with logs
+# ✅ Poster fetch helper (only posters, not backdrops)
 def get_poster_url(movie_id):
     try:
         url = f"{BASE_URL}/movie/{movie_id}/images?api_key={TMDB_API_KEY}&include_image_language=hi,en,null&include_image_region=IN"
         resp = requests.get(url, timeout=10).json()
-        backdrops = resp.get("backdrops", [])
         posters = resp.get("posters", [])
+        print(f"🖼 Found {len(posters)} posters", file=sys.stderr)
 
-        print(f"🖼 Found {len(backdrops)} backdrops, {len(posters)} posters", file=sys.stderr)
-
-        def pick_landscape(images, lang=None, region=None, step=""):
-            for img in images:
+        def pick_poster(lang=None, region=None, step=""):
+            for img in posters:
                 if lang and img.get("iso_639_1") != lang:
                     continue
                 if region and img.get("iso_3166_1") != region:
                     continue
-                w, h = img.get("width"), img.get("height")
-                if w and h and w >= 1000 and h <= 600:  # YouTube thumbnail style
-                    url = f"https://image.tmdb.org/t/p/original{img['file_path']}"
-                    print(f"✅ Picked {step} thumbnail: {url}", file=sys.stderr)
-                    return url
+                url = f"https://image.tmdb.org/t/p/original{img['file_path']}"
+                print(f"✅ Picked {step} poster: {url}", file=sys.stderr)
+                return url
             return None
 
-        # 1️⃣ Hindi
-        url = pick_landscape(backdrops, lang="hi", step="Hindi")
+        # 1️⃣ Hindi poster
+        url = pick_poster(lang="hi", step="Hindi")
         if url: return url
 
-        # 2️⃣ Hindi + Region IN
-        url = pick_landscape(backdrops, lang="hi", region="IN", step="Hindi+IN")
+        # 2️⃣ Hindi+IN poster
+        url = pick_poster(lang="hi", region="IN", step="Hindi+IN")
         if url: return url
 
-        # 3️⃣ English
-        url = pick_landscape(backdrops, lang="en", step="English")
+        # 3️⃣ English poster
+        url = pick_poster(lang="en", step="English")
         if url: return url
 
-        # 4️⃣ Poster fallback
+        # 4️⃣ Any poster fallback
         if posters:
             url = f"https://image.tmdb.org/t/p/original{posters[0]['file_path']}"
-            print(f"📌 Picked Poster fallback: {url}", file=sys.stderr)
+            print(f"📌 Picked fallback poster: {url}", file=sys.stderr)
             return url
 
-        # 5️⃣ Any backdrop fallback
-        if backdrops:
-            url = f"https://image.tmdb.org/t/p/original{backdrops[0]['file_path']}"
-            print(f"📌 Picked Any backdrop fallback: {url}", file=sys.stderr)
-            return url
-
-        print("❌ No image found", file=sys.stderr)
+        print("❌ No poster found", file=sys.stderr)
         return None
     except Exception as e:
         print(f"❌ get_poster_url error: {e}", file=sys.stderr)
@@ -77,6 +67,7 @@ async def movieinfo_command(client: Client, message: Message):
         await message.reply_text("❌ Usage: /movieinfo movie name [year]")
         return
 
+    # Movie name + optional year
     if message.command[-1].isdigit() and len(message.command[-1]) == 4:
         year = message.command[-1]
         name = " ".join(message.command[1:-1])
@@ -123,7 +114,7 @@ async def movieinfo_command(client: Client, message: Message):
 
     # ✅ Languages (from spoken_languages)
     spoken_langs = details.get("spoken_languages", [])
-    langs = [LANG_MAP.get(l["iso_639_1"], l.get("english_name", l["iso_639_1"])) for l in spoken_langs]
+    langs = [LANG_MAP.get(l["iso_639_1"], l["english_name"]) for l in spoken_langs]
     languages = ", ".join(langs) if langs else "N/A"
 
     poster_url = get_poster_url(movie_id)
