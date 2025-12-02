@@ -2428,24 +2428,17 @@ async def advantage_spell_chok(message):
     query = query.strip() + " movie"
     try:
         movies = await get_poster(search, bulk=True)
-    except Exception as e:
-        logger.exception("get_poster failed for query=%s: %s", query, e)
-        try:
-            k = await message.reply(script.I_CUDNT.format(message.from_user.mention))
-            await asyncio.sleep(60)
-            try:
-                await k.delete()
-            except Exception:
-                pass
-        except Exception:
-            pass
+    except:
+        k = await message.reply(script.I_CUDNT.format(message.from_user.mention))
+        await asyncio.sleep(60)
+        await k.delete()
         try:
             await message.delete()
-        except Exception:
+        except:
             pass
         return
     if not movies:
-        google = quote_plus(search)
+        google = search.replace(" ", "+")
         button = [
             [
                 InlineKeyboardButton(
