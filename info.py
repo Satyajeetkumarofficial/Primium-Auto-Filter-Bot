@@ -127,7 +127,7 @@ QUALITIES = [
     "5K",
     "8K",
 ]
-YEARS = [f"{i}" for i in range(2025, 2002, -1)]
+YEARS = [f"{i}" for i in range(2026, 2002, -1)]
 SEASONS = [f"season {i}" for i in range(1, 23)]
 
 # Pictures And Reaction
